@@ -158,6 +158,55 @@ function Profile() {
               </tbody>
             </table>
           </div>
+
+          <div className="block md:hidden space-y-6">
+            {orders.length > 0 ? (
+              orders.map((order) => (
+                <div
+                  key={order._id}
+                  className="border rounded-lg p-4 shadow-sm bg-white space-y-4"
+                >
+                  {/* Top row: image + ID + date */}
+                  <div className="flex justify-between items-start gap-4">
+                    {/* Image on left */}
+                    <img
+                      src={order.items?.[0]?.image}
+                      alt="Product"
+                      className="w-20 h-20 object-cover rounded-md"
+                    />
+
+                    {/* ID + Date on right */}
+                    <div className="flex flex-col items-end text-right text-sm">
+                      <Link
+                        to={`/orderdetails/${order._id}`}
+                        className="font-semibold text-blue-600 hover:underline break-all"
+                      >
+                        #{order._id.slice(-6)}
+                      </Link>
+                      <span className="text-xs text-gray-500">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Order Info Below */}
+                  <div className="flex flex-col text-sm space-y-2">
+                    <p><strong>Items:</strong> {order.items.length}</p>
+                    <p><strong>Total:</strong> ₹{order.paymentDetails?.amount || order.paymentDetails?.amountInINR || 0}</p>
+                    <p><strong>Address:</strong> {formatAddress(order.shippingAddress)}</p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      <span className={`inline-block px-2 py-1 rounded-full text-xs ${getStatusColor(order.status)}`}>
+                        {order.status}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 text-sm">No orders found.</p>
+            )}
+          </div>
         </div>
 
       </div>
